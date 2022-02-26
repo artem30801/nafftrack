@@ -35,7 +35,5 @@ class StatsSnake(dis_snek.Snake):
 
         perf = slash_commands_perf.labels(**labels)
         running = slash_commands_running.labels(**labels)
-        import asyncio
         with perf.time(), running.track_inprogress():
-            await asyncio.sleep(1)
             return await super()._run_slash_command(command, ctx)
