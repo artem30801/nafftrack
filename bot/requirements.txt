@@ -1,0 +1,3 @@
+git+https://github.com/Discord-Snake-Pit/Dis-Snek.git@dev
+prometheus-client==0.13.1
+uvicorn==0.17.5
