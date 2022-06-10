@@ -201,7 +201,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "dis_snek_info",
+          "expr": "naff_info",
           "instant": true,
           "interval": "",
           "legendFormat": "dis-snek {{version}}",
@@ -264,7 +264,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "dis_snek_bot_info{}",
+          "expr": "naff_bot_info{}",
           "instant": true,
           "interval": "",
           "legendFormat": "{{tag}}",
@@ -330,7 +330,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "dis_snek_guilds{}",
+          "expr": "naff_guilds{}",
           "instant": false,
           "interval": "",
           "legendFormat": "Guilds",
@@ -417,7 +417,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "dis_snek_guilds{}",
+          "expr": "naff_guilds{}",
           "interval": "",
           "legendFormat": "Guilds amount",
           "refId": "A"
@@ -570,7 +570,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "avg_over_time(dis_snek_bot_latency{}[$__interval])>0",
+          "expr": "avg_over_time(naff_bot_latency{}[$__interval])>0",
           "instant": false,
           "interval": "",
           "intervalFactor": 4,
@@ -583,7 +583,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "dis_snek_bot_latency{}>0",
+          "expr": "naff_bot_latency{}>0",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -671,7 +671,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "increase(dis_snek_guilds[1d])",
+          "expr": "increase(naff_guilds[1d])",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -752,7 +752,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(increase(dis_snek_received_messages_total[$__range]))",
+          "expr": "sum(increase(naff_received_messages_total[$__range]))",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -815,7 +815,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "label_replace(topk(10, increase(dis_snek_received_messages_total[$__range])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
+          "expr": "label_replace(topk(10, increase(naff_received_messages_total[$__range])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
           "instant": false,
           "interval": "",
           "legendFormat": "{{guild_name}}",
@@ -917,7 +917,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "label_replace(topk(10, increase(dis_snek_received_messages_total[$__interval])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
+          "expr": "label_replace(topk(10, increase(naff_received_messages_total[$__interval])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
           "interval": "",
           "legendFormat": "{{guild_name}}",
           "refId": "A"
@@ -928,7 +928,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(increase(dis_snek_received_messages_total[$__interval]))>0",
+          "expr": "sum(increase(naff_received_messages_total[$__interval]))>0",
           "hide": false,
           "interval": "",
           "legendFormat": "<TOTAL>",
@@ -1030,7 +1030,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "label_replace(topk(10, increase(dis_snek_received_messages_total[$__range])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
+          "expr": "label_replace(topk(10, increase(naff_received_messages_total[$__range])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
           "instant": false,
           "interval": "",
           "legendFormat": "{{guild_name}}",
@@ -1042,7 +1042,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(increase(dis_snek_received_messages_total[$__range]))",
+          "expr": "sum(increase(naff_received_messages_total[$__range]))",
           "hide": false,
           "instant": false,
           "interval": "",
@@ -1101,7 +1101,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "sum(increase(dis_snek_slash_command_perf_bucket{}[1m])) by (le)",
+          "expr": "sum(increase(naff_slash_command_perf_bucket{}[1m])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1216,7 +1216,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "label_replace(topk(10, sum(increase(dis_snek_slash_command_perf_count[$__interval])>0) by (guild_name)), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
+          "expr": "label_replace(topk(10, sum(increase(naff_slash_command_perf_count[$__interval])>0) by (guild_name)), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
           "interval": "",
           "legendFormat": "{{guild_name}}",
           "refId": "A"
@@ -1227,7 +1227,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(increase(dis_snek_slash_command_perf_count[$__interval]))>0",
+          "expr": "sum(increase(naff_slash_command_perf_count[$__interval]))>0",
           "hide": false,
           "interval": "",
           "legendFormat": "<TOTAL>",

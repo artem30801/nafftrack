@@ -1,8 +1,8 @@
 from typing import Any
 
-import dis_snek
-from dis_snek import InteractionContext, SlashCommand
-from stats.stats_defs import (
+import naff
+from naff import InteractionContext, SlashCommand
+from nafftrack.stats import (
     interactions_registered,
     interactions_sync,
     slash_commands_perf,
@@ -10,7 +10,7 @@ from stats.stats_defs import (
 )
 
 
-class StatsSnake(dis_snek.Snake):
+class StatsClient(naff.Client):
     async def synchronise_interactions(self) -> None:
         with interactions_sync.time():
             await super().synchronise_interactions()
@@ -20,9 +20,9 @@ class StatsSnake(dis_snek.Snake):
 
     async def _run_slash_command(self, command: SlashCommand, ctx: InteractionContext) -> Any:
         labels = dict(
-            base_name=command.name,
-            group_name=command.group_name,
-            command_name=command.sub_cmd_name,
+            base_name=command.name.default,
+            group_name=command.group_name.default,
+            command_name=command.sub_cmd_name.default,
             command_id=command.cmd_id,
         )
 

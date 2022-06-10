@@ -1,23 +1,22 @@
 import logging
 import os
 
-import dis_snek
-from stats import stats_client
-
+import naff
+import nafftrack
 
 logging.basicConfig(level=logging.INFO)
 
 debug = bool(int(os.environ.get("DEBUG", "0").strip()))
-debug_scope = os.environ.get("DEBUG_SCOPE", dis_snek.MISSING)
+debug_scope = os.environ.get("DEBUG_SCOPE", naff.MISSING)
 debug_scope = debug_scope.strip() if debug_scope else debug_scope
 
-client = stats_client.StatsSnake(
+client = nafftrack.client.StatsClient(
     asyncio_debug=debug,
     sync_interactions=True,
     debug_scope=debug_scope,
 )
 
-client.grow_scale("dis_snek.ext.debug_scale")
-client.grow_scale("stats.stats_scale")
+client.grow_scale("naff.ext.debug_scale")
+client.load_extension("nafftrack.extension")
 
 client.start(os.environ["DISCORD_TOKEN"].strip())
