@@ -11,9 +11,14 @@ slash_labels = [
     "dm",
 ]
 
-snek_info = Info("naff", "Basic info about dis-snek library")
+lib_info = Info("naff", "Basic info about naff library")
 bot_info = Info("naff_bot", "Basic attributes of the running bot")
 latency_gauge = Gauge("naff_bot_latency", "Latency of the websocket connection")
+
+cache_gauge = Gauge("naff_cache_count", "Amount of objects in internal caches", labelnames=["name"])
+cache_limits_soft = Gauge("naff_cache_soft_limits", "Soft limits on the caches", labelnames=["name"])
+cache_limits_hard = Gauge("naff_cache_hard_limits", "Hard limits on the caches", labelnames=["name"])
+
 
 messages_counter = Counter(
     "naff_received_messages",

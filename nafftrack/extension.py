@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 import logging
 
 import prometheus_client
@@ -11,7 +12,10 @@ from nafftrack.stats import (
     latency_gauge,
     members_gauge,
     messages_counter,
-    snek_info,
+    lib_info,
+    cache_gauge,
+    cache_limits_soft,
+    cache_limits_hard,
 )
 
 
@@ -20,16 +24,24 @@ class Stats(naff.Extension):
     port = 8877
     interval = 5
 
+    def __init__(self, bot):
+        self.bot_caches = {
+            name.removesuffix("_cache"): cache
+            for name, cache in inspect.getmembers(self.bot.cache, predicate=lambda x: isinstance(x, dict))
+            if not name.startswith("__")
+        }
+
     @naff.listen()
     async def on_startup(self) -> None:
         logging.info("Starting metrics endpoint!")
+
         app = prometheus_client.make_asgi_app()
         config = uvicorn.Config(app=app, host=self.host, port=self.port, access_log=False)
         server = uvicorn.Server(config)
         loop = asyncio.get_running_loop()
         loop.create_task(server.serve())
 
-        snek_info.info(
+        lib_info.info(
             {
                 "version": naff.const.__version__,
             }
@@ -75,6 +87,20 @@ class Stats(naff.Extension):
         # Latency stats
         if latency := self.bot.ws.latency:
             latency_gauge.set(latency[-1])
+
+        # Cache stats
+        for name, cache in self.bot_caches.items():
+            cache_g = cache_gauge.labels(name=name)
+            cache_limits_soft_g = cache_limits_soft.labels(name=name)
+            cache_limits_hard_g = cache_limits_hard.labels(name=name)
+
+            cache_g.set(len(cache))
+            if isinstance(cache, naff.smart_cache.TTLCache):
+                cache_limits_soft_g.set(cache.soft_limit)
+                cache_limits_hard_g.set(cache.hard_limit)
+            else:
+                cache_limits_soft_g.set("inf")
+                cache_limits_hard_g.set("inf")
 
     @naff.listen()
     async def on_guild_join(self, _):
