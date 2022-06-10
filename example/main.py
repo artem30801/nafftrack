@@ -16,7 +16,7 @@ client = nafftrack.client.StatsClient(
     debug_scope=debug_scope,
 )
 
-client.grow_scale("naff.ext.debug_scale")
+client.load_extension("naff.ext.debug_extension")
 client.load_extension("nafftrack.extension")
 
 client.start(os.environ["DISCORD_TOKEN"].strip())

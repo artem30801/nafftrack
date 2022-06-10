@@ -56,9 +56,10 @@ class Stats(naff.Extension):
             m_gauge = members_gauge.labels(guild_id=guild.id, guild_name=guild.name)
 
             c_gauge.set(len(guild._channel_ids))
-            m_gauge.set(guild.member_count)
             if naff.Intents.GUILD_MEMBERS in self.bot.intents:
                 m_gauge.set(len(guild._member_ids))
+            else:
+                m_gauge.set(guild.member_count)
 
     @naff.listen()
     async def on_message_create(self, event: naff.events.MessageCreate):
