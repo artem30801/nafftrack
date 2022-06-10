@@ -1,0 +1,4 @@
+naff==1.2.0
+prometheus-client==0.13.1
+uvicorn==0.17.5
+https://github.com/zevaryx/nafftrack.git
