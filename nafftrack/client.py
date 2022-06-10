@@ -1,7 +1,7 @@
 from typing import Any
 
 import naff
-from naff import Command, Context, InteractionContext, PrefixedContext
+from naff import BaseCommand, Context, InteractionContext
 from nafftrack.stats import (
     interactions_registered,
     interactions_sync,
@@ -18,7 +18,7 @@ class StatsClient(naff.Client):
         amount = len(self.application_commands)
         interactions_registered.set(amount)
 
-    async def _run_slash_command(self, command: Command, ctx: Context) -> Any:
+    async def _run_slash_command(self, command: BaseCommand, ctx: Context) -> Any:
         if isinstance(ctx, InteractionContext) and ctx.target_id:
             labels = dict(
                 base_name=command.name.default,
