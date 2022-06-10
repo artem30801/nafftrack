@@ -1,7 +1,7 @@
 from typing import Any
 
 import naff
-from naff import InteractionContext, SlashCommand
+from naff import Command, Context, InteractionContext, PrefixedContext
 from nafftrack.stats import (
     interactions_registered,
     interactions_sync,
@@ -18,13 +18,21 @@ class StatsClient(naff.Client):
         amount = len(self.application_commands)
         interactions_registered.set(amount)
 
-    async def _run_slash_command(self, command: SlashCommand, ctx: InteractionContext) -> Any:
-        labels = dict(
-            base_name=command.name.default,
-            group_name=command.group_name.default,
-            command_name=command.sub_cmd_name.default,
-            command_id=command.cmd_id,
-        )
+    async def _run_slash_command(self, command: Command, ctx: Context) -> Any:
+        if isinstance(ctx, InteractionContext) and ctx.target_id:
+            labels = dict(
+                base_name=command.name.default,
+                group_name=None,
+                command_name=None,
+                command_id=command.cmd_id,
+            )
+        else:
+            labels = dict(
+                base_name=command.name.default,
+                group_name=command.group_name.default,
+                command_name=command.sub_cmd_name.default,
+                command_id=command.cmd_id,
+            )
 
         if guild := ctx.guild:
             guild_labels = dict(guild_id=guild.id, guild_name=guild.name, dm=0)
