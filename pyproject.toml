@@ -2,7 +2,7 @@
 name = "nafftrack"
 version = "0.1.0"
 description = "A stat tracker client for NAFF"
-authors = ["Zevaryx <zevaryx@gmail.com>", "artem30801 <artem30801@gmail.com"]
+authors = ["artem30801 <artem30801@gmail.com"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
