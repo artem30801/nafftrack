@@ -6,8 +6,10 @@ import uvicorn
 import naff
 from nafftrack.stats import (
     bot_info,
+    channels_gauge,
     guilds_gauge,
     latency_gauge,
+    members_gauge,
     messages_counter,
     snek_info,
 )
@@ -49,6 +51,14 @@ class Stats(naff.Extension):
                 "tag": str(self.bot.user.tag),
             }
         )
+        for guild in self.bot.guilds:
+            c_gauge = channels_gauge.labels(guild_id=guild.id, guild_name=guild.name)
+            m_gauge = members_gauge.labels(guild_id=guild.id, guild_name=guild.name)
+
+            c_gauge.set(len(guild._channel_ids))
+            m_gauge.set(guild.member_count)
+            if naff.Intents.GUILD_MEMBERS in self.bot.intents:
+                m_gauge.set(len(guild._member_ids))
 
     @naff.listen()
     async def on_message_create(self, event: naff.events.MessageCreate):
@@ -66,16 +76,36 @@ class Stats(naff.Extension):
             latency_gauge.set(latency[-1])
 
     @naff.listen()
-    async def on_guild_join(self, event):
+    async def on_guild_join(self, _):
         # ignore guild_join events during bot initialization
         if not self.bot.is_ready:
             return
 
-        guilds_gauge.set(len(self.bot.user._guild_ids))
+        guilds_gauge.inc()
 
     @naff.listen()
-    async def on_guild_left(self, event):
-        guilds_gauge.set(len(self.bot.user._guild_ids))
+    async def on_guild_left(self, _):
+        guilds_gauge.dec()
+
+    @naff.listen()
+    async def on_member_remove(self, event: naff.events.MemberRemove):
+        gauge = guilds_gauge.labels(guild_id=event.guild.id, guild_name=event.guild.name)
+        gauge.dec()
+
+    @naff.listen()
+    async def on_member_add(self, event: naff.events.MemberAdd):
+        gauge = guilds_gauge.labels(guild_id=event.guild.id, guild_name=event.guild.name)
+        gauge.inc()
+
+    @naff.listen()
+    async def on_channel_delete(self, event: naff.events.ChannelDelete):
+        gauge = channels_gauge.labels(guild_id=event.guild.id, guild_name=event.guild.name)
+        gauge.dec()
+
+    @naff.listen()
+    async def on_channel_create(self, event: naff.events.ChannelCreate):
+        gauge = channels_gauge.labels(guild_id=event.guild.id, guild_name=event.guild.name)
+        gauge.inc()
 
     # @naff.listen()
     # async def on_guild_unavailable(self, event):

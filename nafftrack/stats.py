@@ -22,11 +22,19 @@ messages_counter = Counter(
 )
 
 guilds_gauge = Gauge("naff_guilds", "Amount of guilds this bot is in")
-channels_gauge = Gauge("naff_channels", "Amount of channels this bot is in")
-members_gauge = Gauge("naff_members", "Amount of members this bot can see")
+channels_gauge = Gauge(
+    "naff_channels", "Amount of channels this bot is in", labelnames=["guild_id", "guild_name"]
+)
+members_gauge = Gauge(
+    "naff_members", "Amount of members this bot can see", labelnames=["guild_id", "guild_name"]
+)
 
-interactions_registered = Gauge("naff_interactions_registered", "Amount of registered application commands")
-interactions_sync = Summary("naff_interactions_sync", "Amount of syncs and time spent syncing interactions")
+interactions_registered = Gauge(
+    "naff_interactions_registered", "Amount of registered application commands"
+)
+interactions_sync = Summary(
+    "naff_interactions_sync", "Amount of syncs and time spent syncing interactions"
+)
 
 
 slash_commands_perf = Histogram(
