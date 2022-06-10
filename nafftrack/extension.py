@@ -12,8 +12,6 @@ from nafftrack.stats import (
     snek_info,
 )
 
-logger = logging.getLogger(__name__)
-
 
 class Stats(naff.Extension):
     host = "0.0.0.0"
@@ -37,7 +35,9 @@ class Stats(naff.Extension):
 
         guilds_gauge.set(len(self.bot.user._guild_ids))
 
-        stats_task = naff.Task(self.collect_stats, naff.triggers.IntervalTrigger(seconds=self.interval))
+        stats_task = naff.Task(
+            self.collect_stats, naff.triggers.IntervalTrigger(seconds=self.interval)
+        )
         stats_task.start()
 
     @naff.listen()
