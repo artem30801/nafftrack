@@ -15,7 +15,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": ""
+      "version": "8.5.5"
     },
     {
       "type": "panel",
@@ -52,7 +52,10 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -71,11 +74,16 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": null,
+  "iteration": 1654824804173,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "M4ODYSjnz"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -88,6 +96,10 @@
       "type": "row"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -131,15 +143,16 @@
         },
         "textMode": "name"
       },
-      "pluginVersion": "",
+      "pluginVersion": "8.5.5",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "builder",
           "exemplar": false,
-          "expr": "python_info{}",
+          "expr": "python_info{job=\"$job\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "{{implementation}} {{version}}",
@@ -150,6 +163,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -193,18 +210,19 @@
         },
         "textMode": "name"
       },
-      "pluginVersion": "",
+      "pluginVersion": "8.5.5",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "builder",
           "exemplar": false,
-          "expr": "naff_info",
+          "expr": "naff_info{job=\"$job\"}",
           "instant": true,
           "interval": "",
-          "legendFormat": "dis-snek {{version}}",
+          "legendFormat": "naff {{version}}",
           "refId": "A"
         }
       ],
@@ -212,6 +230,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -256,15 +278,16 @@
         },
         "textMode": "name"
       },
-      "pluginVersion": "",
+      "pluginVersion": "8.5.5",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "builder",
           "exemplar": false,
-          "expr": "naff_bot_info{}",
+          "expr": "naff_bot_info{job=\"$job\"}",
           "instant": true,
           "interval": "",
           "legendFormat": "{{tag}}",
@@ -275,6 +298,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -322,7 +349,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "8.5.5",
       "targets": [
         {
           "datasource": {
@@ -330,7 +357,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "naff_guilds{}",
+          "expr": "naff_guilds{job=\"$job\"}",
           "instant": false,
           "interval": "",
           "legendFormat": "Guilds",
@@ -341,6 +368,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -407,7 +438,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -417,7 +449,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "naff_guilds{}",
+          "expr": "naff_guilds{job=\"$job\"}",
           "interval": "",
           "legendFormat": "Guilds amount",
           "refId": "A"
@@ -428,6 +460,10 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -560,7 +596,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -569,8 +606,9 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "builder",
           "exemplar": true,
-          "expr": "avg_over_time(naff_bot_latency{}[$__interval])>0",
+          "expr": "avg_over_time(naff_bot_latency{job=\"$job\"}[$__interval]) > 0",
           "instant": false,
           "interval": "",
           "intervalFactor": 4,
@@ -582,12 +620,14 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
+          "editorMode": "builder",
           "exemplar": true,
-          "expr": "naff_bot_latency{}>0",
+          "expr": "naff_bot_latency{job=\"$job\"} > 0",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "Actual latency",
+          "range": true,
           "refId": "B"
         }
       ],
@@ -595,6 +635,10 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -661,7 +705,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -671,7 +716,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "increase(naff_guilds[1d])",
+          "expr": "increase(naff_guilds{job=\"$job\"}[1d])",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -686,6 +731,10 @@
     },
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "M4ODYSjnz"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -698,6 +747,10 @@
       "type": "row"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -744,7 +797,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "",
+      "pluginVersion": "8.5.5",
       "targets": [
         {
           "datasource": {
@@ -752,7 +805,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(increase(naff_received_messages_total[$__range]))",
+          "expr": "sum(increase(naff_received_messages_total{job=\"$job\"}[$__range]))",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -762,6 +815,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -805,7 +862,8 @@
           "values": false
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -815,7 +873,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "label_replace(topk(10, increase(naff_received_messages_total[$__range])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
+          "expr": "label_replace(topk(10, increase(naff_received_messages_total{job=\"$job\"}[$__range])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
           "instant": false,
           "interval": "",
           "legendFormat": "{{guild_name}}",
@@ -827,6 +885,10 @@
       "type": "piechart"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -907,7 +969,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "targets": [
@@ -917,7 +980,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "label_replace(topk(10, increase(naff_received_messages_total[$__interval])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
+          "expr": "label_replace(topk(10, increase(naff_received_messages_total{job=\"$job\"}[$__interval])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
           "interval": "",
           "legendFormat": "{{guild_name}}",
           "refId": "A"
@@ -928,7 +991,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(increase(naff_received_messages_total[$__interval]))>0",
+          "expr": "sum(increase(naff_received_messages_total{job=\"$job\"}[$__interval]))>0",
           "hide": false,
           "interval": "",
           "legendFormat": "<TOTAL>",
@@ -939,6 +1002,10 @@
       "type": "timeseries"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1020,7 +1087,8 @@
           "placement": "right"
         },
         "tooltip": {
-          "mode": "single"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -1030,7 +1098,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "label_replace(topk(10, increase(naff_received_messages_total[$__range])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
+          "expr": "label_replace(topk(10, increase(naff_received_messages_total{job=\"$job\"}[$__range])>0), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
           "instant": false,
           "interval": "",
           "legendFormat": "{{guild_name}}",
@@ -1042,7 +1110,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(increase(naff_received_messages_total[$__range]))",
+          "expr": "sum(increase(naff_received_messages_total{job=\"$job\"}[$__range]))",
           "hide": false,
           "instant": false,
           "interval": "",
@@ -1055,6 +1123,10 @@
     },
     {
       "collapsed": false,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "M4ODYSjnz"
+      },
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1078,6 +1150,10 @@
         "mode": "spectrum"
       },
       "dataFormat": "tsbuckets",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "description": "",
       "gridPos": {
         "h": 8,
@@ -1101,7 +1177,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "sum(increase(naff_slash_command_perf_bucket{}[1m])) by (le)",
+          "expr": "sum(increase(naff_slash_command_perf_bucket{job=\"$job\"}[1m])) by (le)",
           "format": "heatmap",
           "hide": false,
           "interval": "",
@@ -1126,6 +1202,10 @@
       "yBucketBound": "auto"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1206,7 +1286,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "targets": [
@@ -1216,7 +1297,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "label_replace(topk(10, sum(increase(naff_slash_command_perf_count[$__interval])>0) by (guild_name)), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
+          "expr": "label_replace(topk(10, sum(increase(naff_slash_command_perf_count{job=\"$job\"}[$__interval])>0) by (guild_name)), \"guild_name\", \"<DM>\", \"dm\", \"1\")",
           "interval": "",
           "legendFormat": "{{guild_name}}",
           "refId": "A"
@@ -1227,7 +1308,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
-          "expr": "sum(increase(naff_slash_command_perf_count[$__interval]))>0",
+          "expr": "sum(increase(naff_slash_command_perf_count{job=\"$job\"}[$__interval]))>0",
           "hide": false,
           "interval": "",
           "legendFormat": "<TOTAL>",
@@ -1238,12 +1319,33 @@
       "type": "timeseries"
     }
   ],
-  "refresh": false,
-  "schemaVersion": 34,
+  "refresh": "5s",
+  "schemaVersion": 36,
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "discord-bot",
+          "value": "discord-bot"
+        },
+        "description": "Job name for filtering",
+        "hide": 0,
+        "name": "job",
+        "options": [
+          {
+            "selected": true,
+            "text": "discord-bot",
+            "value": "discord-bot"
+          }
+        ],
+        "query": "discord-bot",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
   },
   "time": {
     "from": "now-6h",
@@ -1253,6 +1355,6 @@
   "timezone": "",
   "title": "Discord Bot",
   "uid": "krw0k3bnz",
-  "version": 37,
+  "version": 2,
   "weekStart": ""
 }
