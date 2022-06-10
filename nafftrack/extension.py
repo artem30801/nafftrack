@@ -89,12 +89,12 @@ class Stats(naff.Extension):
 
     @naff.listen()
     async def on_member_remove(self, event: naff.events.MemberRemove):
-        gauge = guilds_gauge.labels(guild_id=event.guild.id, guild_name=event.guild.name)
+        gauge = members_gauge.labels(guild_id=event.guild.id, guild_name=event.guild.name)
         gauge.dec()
 
     @naff.listen()
     async def on_member_add(self, event: naff.events.MemberAdd):
-        gauge = guilds_gauge.labels(guild_id=event.guild.id, guild_name=event.guild.name)
+        gauge = members_gauge.labels(guild_id=event.guild.id, guild_name=event.guild.name)
         gauge.inc()
 
     @naff.listen()
