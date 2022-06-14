@@ -27,7 +27,9 @@ class Stats(naff.Extension):
     def __init__(self, bot):
         self.bot_caches = {
             name.removesuffix("_cache"): cache
-            for name, cache in inspect.getmembers(self.bot.cache, predicate=lambda x: isinstance(x, dict))
+            for name, cache in inspect.getmembers(
+                self.bot.cache, predicate=lambda x: isinstance(x, dict)
+            )
             if not name.startswith("__")
         }
 
@@ -126,12 +128,16 @@ class Stats(naff.Extension):
 
     @naff.listen()
     async def on_channel_delete(self, event: naff.events.ChannelDelete):
-        gauge = channels_gauge.labels(guild_id=event.guild.id, guild_name=event.guild.name)
+        gauge = channels_gauge.labels(
+            guild_id=event.channel.guild.id, guild_name=event.channel.guild.name
+        )
         gauge.dec()
 
     @naff.listen()
     async def on_channel_create(self, event: naff.events.ChannelCreate):
-        gauge = channels_gauge.labels(guild_id=event.guild.id, guild_name=event.guild.name)
+        gauge = channels_gauge.labels(
+            guild_id=event.channel.guild.id, guild_name=event.channel.guild.name
+        )
         gauge.inc()
 
     # @naff.listen()
