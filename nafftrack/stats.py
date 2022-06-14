@@ -63,5 +63,5 @@ slash_commands_running = Gauge(
 slash_command_errors = Counter(
     "naff_slash_command_errors",
     "Amount of errors experienced in the bot",
-    labels=slash_labels,
+    labelnames=slash_labels,
 )
