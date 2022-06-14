@@ -707,7 +707,7 @@
               }
             ]
           },
-          "unit": "interactons"
+          "unit": "ions"
         },
         "overrides": []
       },
@@ -748,7 +748,7 @@
           "refId": "A"
         }
       ],
-      "title": "Interaction Registereds",
+      "title": "Interactions Registered",
       "type": "stat"
     },
     {
