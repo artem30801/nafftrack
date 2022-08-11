@@ -1,5 +1,9 @@
 import asyncio
 import inspect
+import logging
+import socket
+
+from typing import Optional, List, Sequence
 
 import prometheus_client
 import uvicorn
@@ -17,6 +21,52 @@ from nafftrack.stats import (
     cache_limits_hard,
 )
 
+logger = logging.getLogger("nafftrack")
+
+
+class StatsServer(uvicorn.Server):
+    async def serve(self, sockets: Optional[List[socket.socket]] = None) -> None:
+        config = self.config
+        if not config.loaded:
+            config.load()
+
+        self.lifespan = config.lifespan_class(config)
+        self.force_exit = True  # to disable waiting for ctrl+c on exit in some cases
+
+        logger.info("Started metrics endpoint server")
+
+        await self.startup(sockets=sockets)
+        if self.should_exit:
+            return
+        try:
+            await self.main_loop()
+            # set self.should_exit = True to force main loop to exit. Maybe use in some events?
+        finally:
+            await self.shutdown(sockets=sockets)
+            logger.info("Finished metrics endpoint server")
+
+    def _log_started_message(self, listeners: Sequence[socket.SocketType]) -> None:
+        config = self.config
+
+        addr_format = "%s://%s:%d"
+        host = "0.0.0.0" if config.host is None else config.host
+        if ":" in host:
+            # It's an IPv6 address.
+            addr_format = "%s://[%s]:%d"
+
+        port = config.port
+        if port == 0:
+            port = listeners[0].getsockname()[1]
+
+        protocol_name = "https" if config.ssl else "http"
+        message = f"Uvicorn is running metrics endpoint on {addr_format}"
+        logger.info(
+            message,
+            protocol_name,
+            host,
+            port,
+        )
+
 
 class Stats(naff.Extension):
     host = "0.0.0.0"
@@ -24,6 +74,8 @@ class Stats(naff.Extension):
     interval = 5
 
     def __init__(self, bot):
+        self.server: Optional[StatsServer] = None
+
         self.bot_caches = {
             name.removesuffix("_cache"): cache
             for name, cache in inspect.getmembers(
@@ -35,10 +87,11 @@ class Stats(naff.Extension):
     @naff.listen()
     async def on_startup(self) -> None:
         app = prometheus_client.make_asgi_app()
-        config = uvicorn.Config(app=app, host=self.host, port=self.port, access_log=False)
-        server = uvicorn.Server(config)
+        cfg = uvicorn.Config(app=app, host=self.host, port=self.port, access_log=False)
+        self.server = StatsServer(cfg)
+
         loop = asyncio.get_running_loop()
-        loop.create_task(server.serve())
+        loop.create_task(self.server.serve())
 
         lib_info.info(
             {
