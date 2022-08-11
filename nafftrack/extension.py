@@ -1,6 +1,5 @@
 import asyncio
 import inspect
-import logging
 
 import prometheus_client
 import uvicorn
@@ -35,8 +34,6 @@ class Stats(naff.Extension):
 
     @naff.listen()
     async def on_startup(self) -> None:
-        logging.info("Starting metrics endpoint!")
-
         app = prometheus_client.make_asgi_app()
         config = uvicorn.Config(app=app, host=self.host, port=self.port, access_log=False)
         server = uvicorn.Server(config)
